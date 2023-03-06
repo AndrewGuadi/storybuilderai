@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Story Form</title>
+	<link rel="stylesheet" href="static/styles.css">
+</head>
+<body>
+    <div id="loading" style="display:none;">
+        <img src="static/spinner.svg" alt="Loading...">
+    </div>
+	<div class="container" id="container">
+		<h1>Let's Create your Story</h1>
+		<form id="initialForm" action="initiate_story" method="POST" onsubmit="validateForm()">
+			<label for="author">Favorite Author:</label>
+			<input type="text" id="author" name="author" required>
+
+			<label for="books">Top 3 Favorite Books:</label>
+			<textarea id="books" name="books" required></textarea>
+
+			<label for="genre">Genre of Book:</label>
+			<select id="genre" name="genre" required>
+				<option value="action">Action</option>
+				<option value="adventure">Adventure</option>
+				<option value="comedy">Comedy</option>
+				<option value="drama">Drama</option>
+				<option value="horror">Horror</option>
+				<option value="mystery">Mystery</option>
+				<option value="romance">Romance</option>
+				<option value="sci-fi">Science Fiction</option>
+				<option value="other">Other</option>
+			</select>
+
+			<label for="length">Length of Story:</label>
+			<div class="radio-buttons">
+				<input type="radio" id="short" name="length" value="short">
+				<label for="short">Short</label>
+
+				<input type="radio" id="medium" name="length" value="medium">
+				<label for="medium">Medium</label>
+
+				<input type="radio" id="long" name="length" value="long">
+				<label for="long">Long</label>
+			</div>
+
+			<button type="submit">Submit</button>
+		</form>
+	</div>
+    <script src="/static/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,2 @@
+The first part of this story was <<first pages>>.
+Conclude the story as if: <<user_action>>

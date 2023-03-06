@@ -1,0 +1,23 @@
+Fill this format, with brand new, never heard of characters and elements, for a new book in the style of these books <<user_books>> as a <<genre>> book.
+[Format]:
+{
+    opening: [fill this in],
+    plot: [fill this in],
+    creating_emotional_attachment: [fill this in],
+    conflict: [fill this in],
+    climax: [fill this in],
+    resolution: [fill this in],
+    title: [fill this in],
+    author: [fill this in],
+    genre: [fill this in],
+    characters:[fill this in],
+    setting: [fill this in],
+    conflict:[fill this in],
+    resolution: [fill this in],
+    themes: [fill this in],
+    tone: [fill this in],
+    point_of_view: [fill this in],
+    style: [fill this in],
+    symbolism: [fill this in],
+    imagery: [fill this in]
+}
