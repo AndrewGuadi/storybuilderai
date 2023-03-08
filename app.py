@@ -2,15 +2,15 @@ import openai
 import random
 import math
 from time import time, sleep
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 
 
 app = Flask(__name__)
 
 #openai variables (store as environment variable before deployment)
+openai.organization = [ORGANIZATION]
+openai.api_key = [API KEY]
 
-
-#global_variables
 #global varibables
 messages = [
                 {"role": "system", "content": "You are the most renowned author of our generation and everything you write is perfect."},
@@ -145,30 +145,14 @@ def quick_build():
 
     return render_template('index.html', page1_text=page1_text, page2_text=page2_text)
 
-@app.route("/story_form")
+@app.route("/story_form", methods=['GET', 'POST'])
 def story_form():
 
-    return render_template('initial_story_form.html')
+    if request.method =="POST":
+        return render_template('index.html')
+    else:
+        return render_template('initial_story_form.html')
 
-
-@app.route("/initiate_story", methods=['POST'])
-def initiate_story():
-    print("Writing Story...")
-    form_data = request.form
-    print(form_data)
-    favorite_books_list = request.form.get('books')
-    favorite_author = request.form.get('author')
-    favorite_genre = request.form.get('genre')
-    story_length = request.form.get('length')
-    document_prompt = open_file("resources/story_format_prompt.txt")
-    formatted_prompt = document_prompt.replace("<<user_books>>", favorite_books_list).replace('<<user_author>>', favorite_author).replace('<<genre>>', favorite_genre)
-    story_format = make_gpt_call('Generate a plot for a sci-fi novel set in a distant future where humans have colonized other planets. The story should follow a group of explorers who discover a mysterious alien artifact that could change the course of humanity. The main character should be a strong-willed but conflicted captain of the exploration team.')
-    initial_story_text = create_story()
-    two_pages_array = divide_text_into_two_pages(initial_story_text)
-    page1_text = two_pages_array[0]
-    page2_text = two_pages_array[1]
-    print(page2_text)
-    return render_template('index.html', page1_text=page1_text, page2_text=page2_text)
 
 @app.route("/complete_story")
 def complete_story():
@@ -179,6 +163,67 @@ def complete_story():
 
     return render_template('index.html', page1_text=page1_text, page2_text=page2_text)
 
+
+
+###############################
+#TEST DATA TEST DATA TEST DATA#
+###############################
+@app.route('/pages', methods=['GET', 'POST'])
+def pages():
+    if request.method == "GET":
+        print("GET")
+        prompt_text_array = ['action-adventure', 'comedy', 'drama', 'comedy', 'fantasy', 'historical_fiction', 'historical_romance', 'horror', 'military_war', 'mystery', 'spy', 'superhero']
+        random_number = random.random()
+        array_length = len(prompt_text_array)
+        random_prompt_number = math.floor(random_number*array_length)
+        random_prompt = prompt_text_array[random_prompt_number]
+        ##extract text from document
+        prompt = open_file('resources/quick_build_prompts/%s.txt' % random_prompt)
+        print(prompt)
+        prompt_data = prompt
+        return render_template('index.html', text=prompt_data)
+    
+    if request.method == "POST":
+        print("POST METHOD")
+        author = request.form.get('author')
+        genre = request.form.get('genre')
+        user_books = request.form.get('books')
+        prompt_document = open_file('resources/quick_build_prompts/adlib-prompt.txt').replace('<<genre>>', genre).replace('<<author>>', author).replace('<<user_books>>', user_books)
+        print(prompt_document)
+        return render_template('index.html', text=prompt_document)
+    
+@app.route('/stream')
+def stream():
+    value = request.args.get('prompt')
+    print(value)
+    response = Response(stream_response(value), mimetype='text/event-stream')
+    response.headers['Cache-Control'] = 'no-cache'
+    return response
+
+    
+
+def stream_response(prompt, model='text-davinci-003', temp=0.8, top_p=1.0, n=1, best_of=1, tokens=3000, freq_pen=1.1, pres_pen=0.0):
+    completion = openai.Completion.create(
+        model=model,
+        prompt=prompt,
+        max_tokens=tokens,
+        temperature=temp,
+        top_p=1,
+        n=n,
+        presence_penalty=pres_pen,
+        frequency_penalty=freq_pen,
+        best_of=best_of,
+        stream=True,
+        
+        )
+    
+    for obj in completion:
+        try:
+            text = obj.choices[0].text
+            print(text, end="")
+            yield f"data: {text}\n\n"
+        except AttributeError:
+            yield "data: [ERROR] No data available./n/n"
 
 if __name__ == "__main__":
     app.run(debug=True)

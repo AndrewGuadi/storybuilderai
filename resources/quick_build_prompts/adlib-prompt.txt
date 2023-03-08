@@ -1,0 +1,1 @@
+Write the first 600 words <<genre>> book that has similar tones of <<user_books>> and a similiar writing style to <<author>>

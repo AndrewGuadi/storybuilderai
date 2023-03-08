@@ -8,18 +8,16 @@
 
 <body>
   <header>
-    <h1>YOUR NEW BOOK</h1>
+    <h1 id="book-title"></h1>
   </header>
   <div class="book">
     <div id="page1" class="page">
       <!--This is where the page 1 text is-->
-      {{ page1_text }}
-      
+            
     </div>
     <div id="page2" class="page">
       <!--This is where the page 2 text will be loaded in-->
-      {{ page2_text }}
-      
+            
     </div>
     <a href="/complete_story">
       <div id="arrowDiv" class="continue-btn">
@@ -28,7 +26,11 @@
     </a>
 
   </div>
-  <!-- <script src="static/script.js"></script> -->
+  <script>
+    const text = '{{ text }}'
+    console.log(text)
+  </script>
+  <script src="static/script2.js"></script>
 </body>
 
 </html>
